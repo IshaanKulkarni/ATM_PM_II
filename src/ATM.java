@@ -107,7 +107,8 @@ public class ATM {
         }
     }
     public void Logout() throws SQLException{
-        System.out.println("Bye!");
+        System.out.println("Bye! Glad to be of service!");
         Login();
     }
 }
+
