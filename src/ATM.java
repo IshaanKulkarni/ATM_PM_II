@@ -2,6 +2,8 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ATM {
+//    This is the amount of money at the start of the day in the machine
+    static int available=500000;
     Scanner sc=new Scanner(System.in);
     dbConnect db;
     public static void main(String[] args) throws SQLException{
@@ -13,7 +15,7 @@ public class ATM {
     }
     int customerid,PIN;
     public void Login() throws SQLException {
-        System.out.println("Enter your customerid:");
+        System.out.println("Enter your customerid");
         customerid=sc.nextInt();
         System.out.println("Enter your PIN please");
         PIN=sc.nextInt();
@@ -27,6 +29,7 @@ public class ATM {
             Login();
         }
     }
+
 
     public void Display_Menu() throws SQLException{
         System.out.println("*********Menu**********");
@@ -63,8 +66,9 @@ public class ATM {
         System.out.println("Enter amount to withdraw: ");
         int amount=sc.nextInt();
         boolean flag=db.withdrawmoney(customerid,amount);
-        if(flag){
+        if(flag&&amount<=available){
             System.out.println("Please collect cash!");
+            available=available-amount;
             int rem=db.getBalance(customerid);
             System.out.println("Remaining balance is:" +rem);
             Display_Menu();
@@ -77,6 +81,7 @@ public class ATM {
         System.out.println("Enter amount to deposit: ");
         int amount=sc.nextInt();
         boolean flag=db.deposit(customerid,amount);
+        available=available+amount;
         System.out.println("Money deposited successfully!");
         int rem=db.getBalance(customerid);
         System.out.println("Updated balance in account is: "+rem);
@@ -101,8 +106,8 @@ public class ATM {
             Display_Menu();
         }
     }
-    public void Logout(){
+    public void Logout() throws SQLException{
         System.out.println("Bye!");
-        System.exit(0);
+        Login();
     }
 }
